@@ -58,9 +58,9 @@ export class AuthPage implements OnInit {
           this.utilService.dismissLoading();
 
           this.utilService.presentToast({
-            message: error,
+            message: 'Error when authenticating',
             duration: 5000,
-            color: 'warning',
+            color: 'danger',
             icon: 'alert-circle-outline',
           });
         }
