@@ -1,0 +1,101 @@
+<ion-content color="light">
+  <app-header
+    color="light"
+    [centerTitle]="true"
+    [isModal]="true"
+    [title]="task ? 'Task' : 'New Task'"
+  ></app-header>
+
+  <app-custom-input
+    [control]="form.controls.title"
+    type="text"
+    label="Title"
+    class=".test"
+  ></app-custom-input>
+  <div
+    class="validators"
+    *ngIf="
+      form.controls.title.errors &&
+      form.controls.title.touched &&
+      form.controls.title.dirty
+    "
+  >
+    <div *ngIf="form.controls.title.errors?.['required']">
+      Title is required!
+    </div>
+    <div *ngIf="form.controls.title.errors?.['email']">
+      Title must have at least 4 characters!
+    </div>
+  </div>
+
+  <app-custom-input
+    [control]="form.controls.description"
+    type="textarea"
+    label="Description"
+  ></app-custom-input>
+  <div
+    class="validators"
+    *ngIf="
+      form.controls.description.errors &&
+      form.controls.description.touched &&
+      form.controls.description.dirty
+    "
+  >
+    <div *ngIf="form.controls.description.errors?.['required']">
+      Description is required!
+    </div>
+    <div *ngIf="form.controls.description.errors?.['email']">
+      Description must have at least 4 characters!
+    </div>
+  </div>
+
+  <ion-item class="item-header" lines="none">
+    <ion-label>Activities</ion-label>
+
+    <span slot="end" *ngIf="form.value.items.length">
+      Progress: {{ getPercentage() }}%
+    </span>
+
+    <ion-button (click)="createItem()" slot="end" mode="ios">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-range [value]="getPercentage()"></ion-range>
+
+  <ion-reorder-group
+    [disabled]="false"
+    (ionItemReorder)="handleReorder($any($event))"
+  >
+    <div *ngFor="let item of form.value.items; index as i">
+      <ion-item lines="none">
+        <ion-checkbox
+          slot="start"
+          color="success"
+          [(ngModel)]="item.completed"
+        ></ion-checkbox>
+        <ion-label class="ion-text-wrap"> {{ item.name }} </ion-label>
+
+        <ion-buttons slot="end">
+          <ion-button (click)="removeItem(i)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+
+      </ion-item>
+
+      <ion-item class="item-reoder">
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item>
+    </div>
+  </ion-reorder-group>
+</ion-content>
+
+<ion-footer>
+
+<div class="ion-text-center">
+  <ion-button class="ion-margin" [disabled]="form.invalid" mode="ios" (click)="submit()" shape="round">
+    {{ task ? 'Save Changes' : 'Create Task'}}
+  </ion-button>
+</div>
+</ion-footer>
