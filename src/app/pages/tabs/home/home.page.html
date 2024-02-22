@@ -1,0 +1,110 @@
+<ion-content>
+  <app-header title="Tasks"></app-header>
+
+  <div class="content">
+    <ion-button (click)="addOrUpdatetask()" class="ion-margin" mode="ios">
+      New Task
+      <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+    </ion-button>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          *ngFor="let task of tasks"
+          sizeLg="6"
+          sizeMd="6"
+          sizeSm="12"
+          size="12"
+        >
+          <ion-card mode="ios">
+            <ion-grid>
+              <ion-row>
+                <ion-col
+                  class="ion-text-center"
+                  sizeLg="5"
+                  sizeMd="5"
+                  sizeSm="4"
+                  size="12"
+                >
+                  <circle-progress
+                    [percent]="getPercentage(task)"
+                    [radius]="65"
+                    [outerStrokeWidth]="6"
+                    [innerStrokeWidth]="4"
+                    [outerStrokeColor]="'#78C000'"
+                    [innerStrokeColor]="'#C7E596'"
+                    [titleColor]="'var(--ion-color-dark)'"
+                    [animation]="true"
+                    [animationDuration]="300"
+                    [subtitle]="'Progress'"
+                  ></circle-progress>
+                </ion-col>
+
+                <ion-col
+                  class="ion-padding"
+                  sizeLg="7"
+                  sizeMd="7"
+                  sizeSm="8"
+                  size="12"
+                >
+                  <div class="ion-text-center">
+                    <div class="title">{{task.title}}</div>
+                    <p class="p">{{task.description | slice:0:85}}...</p>
+
+                    <ion-button
+                      (click)="addOrUpdatetask(task)"
+                      class="task-btn"
+                      mode="ios"
+                      size="small"
+                    >
+                      See Task
+                      <ion-icon slot="end" name="eye-outline"></ion-icon>
+                    </ion-button>
+
+                    <ion-button
+                      (click)="confirmDeleteTask(task)"
+                      class="task-btn"
+                      mode="ios"
+                      color="danger"
+                      size="small"
+                    >
+                      Delete Task
+                      <ion-icon slot="end" name="trash-outline"></ion-icon>
+                    </ion-button>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="loading">
+        <ion-col *ngFor="let p of [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]" sizeLg="6" sizeMd="6" sizeSm="12" size="12">
+          <ion-card mode="ios">
+            <div *ngFor="let item of [1,1,1,1]">
+              <ion-skeleton-text
+                animated
+                style="width: 50%"
+              ></ion-skeleton-text>
+            </div>
+            <div *ngFor="let item of [1,1,1,1]">
+              <ion-skeleton-text
+                animated
+                style="width: 40%"
+              ></ion-skeleton-text>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <!-- No Tasks -->
+      <ion-row *ngIf="!loading && !tasks.length">
+        <ion-col class="empty" size="12">
+          <ion-icon name="create-outline"></ion-icon>
+          <h4>No tasks</h4>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>
