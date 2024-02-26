@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, filter, interval, take } from 'rxjs';
 import { Task } from 'src/app/models/task.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -21,18 +22,17 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit() {
-
+    this.waitForUserToLoad().subscribe(() => {
+      this.getTasks();
+      this.getUser();
+    });
   }
 
-  ionViewWillEnter() {
-    this.getTasks();
-    this.getUser();
-  }
+  ionViewWillEnter() {}
 
   getUser() {
-    return this.user = this.utilsService.getElementFromLocalStorage('user');
+    return (this.user = this.utilsService.getElementFromLocalStorage('user'));
   }
-
 
   getPercentage(task: Task) {
     return this.utilsService.getPercentage(task);
@@ -47,14 +47,14 @@ export class HomePage implements OnInit {
       cssClass: '.add-update-modal',
     });
 
-    if(res && res.success) {
+    if (res && res.success) {
       this.getTasks();
     }
   }
 
   getTasks() {
     let user: User = this.utilsService.getElementFromLocalStorage('user');
-    let path = `users/${user.uid}`;
+    let path = `Users/${user.uid}`;
 
     this.loading = true;
 
@@ -64,8 +64,15 @@ export class HomePage implements OnInit {
         this.tasks = res;
         sub.unsubscribe();
         this.loading = false;
-      }
+      },
     });
+  }
+
+  waitForUserToLoad(): Observable<number> {
+    return interval(100).pipe(
+      filter(() => !!localStorage.getItem('user')),
+      take(1)
+    );
   }
 
   confirmDeleteTask(task: Task) {
@@ -88,39 +95,33 @@ export class HomePage implements OnInit {
     });
   }
 
-  // Delete task
   deleteTask(task: Task) {
-    let path = `users/${this.user.uid}/tasks/${task.id}`;
+    let path = `Users/${this.user.uid}/tasks/${task.id}`;
 
     this.utilsService.presentLoading();
 
-    this.firebaseService
-      .deleteDocument(path)
-      .then(
-        (res) => {
+    this.firebaseService.deleteDocument(path).then(
+      (res) => {
+        this.utilsService.presentToast({
+          message: 'Task deleted successfully',
+          color: 'success',
+          icon: 'checkmark-circle-outline',
+          duration: 1500,
+        });
 
-          this.utilsService.presentToast({
-            message: 'Task deleted successfully',
-            color: 'success',
-            icon: 'checkmark-circle-outline',
-            duration: 1500
-          });
-          this.getTasks();
-          this.utilsService.dismissLoading();
-        },
-        (error) => {
+        this.getTasks();
+        this.utilsService.dismissLoading();
+      },
+      (error) => {
+        this.utilsService.presentToast({
+          message: 'Error when deleting task!',
+          color: 'danger',
+          icon: 'alert-circle-outline',
+          duration: 5000,
+        });
 
-          this.utilsService.presentToast({
-            message: error,
-            color: 'warning',
-            icon: 'alert-circle-outline',
-            duration: 5000
-          });
-
-          this.utilsService.dismissLoading();
-        }
-      );
+        this.utilsService.dismissLoading();
+      }
+    );
   }
-
-
 }
