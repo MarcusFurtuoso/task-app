@@ -74,7 +74,7 @@ export class AuthPage implements OnInit {
           console.log(error);
 
           this.utilService.presentToast({
-            message: 'Error when authenticating',
+            message: 'Error when authenticating!',
             duration: 5000,
             color: 'danger',
             icon: 'alert-circle-outline',

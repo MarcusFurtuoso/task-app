@@ -51,7 +51,7 @@ export class AddUpdateTaskComponent implements OnInit {
 
   // Create task
   createTask() {
-    let path = `users/${this.user.uid}`;
+    let path = `Users/${this.user.uid}`;
     this.utilsService.presentLoading();
 
     delete this.form.value.id;
@@ -87,7 +87,7 @@ export class AddUpdateTaskComponent implements OnInit {
 
   // Update task
   updateTask() {
-    let path = `users/${this.user.uid}/tasks/${this.task.id}`;
+    let path = `Users/${this.user.uid}/tasks/${this.task.id}`;
 
     this.utilsService.presentLoading();
     delete this.form.value.id;
@@ -146,7 +146,6 @@ export class AddUpdateTaskComponent implements OnInit {
         },
       ],
       buttons: [
-
         {
           text: 'Cancel',
           role: 'cancel',
