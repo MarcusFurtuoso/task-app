@@ -17,6 +17,7 @@ import { AddUpdateTaskComponent } from './components/add-update-task/add-update-
     LogoComponent,
     NgCircleProgressModule,
     AddUpdateTaskComponent,
+    ReactiveFormsModule,
   ],
   imports: [
     CommonModule,

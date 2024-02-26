@@ -15,6 +15,8 @@ export class RegisterPage implements OnInit {
   form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
     email: new FormControl('', [Validators.required, Validators.email]),
+    dateOfBirth: new FormControl('', [Validators.required]),
+    country: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     confirmPassword: new FormControl(''),
   });
@@ -40,9 +42,11 @@ export class RegisterPage implements OnInit {
 
   submit(): void {
     if (this.form.valid) {
-      this.utilService.presentLoading({ message: 'Registering...' })
+      this.utilService.presentLoading({ message: 'Registering...' });
 
-      this.firebaseService.register(this.form.value as User).then(
+      let { confirmPassword, ...userWithoutConfirmPassword } = this.form.value;
+
+      this.firebaseService.register(userWithoutConfirmPassword as User).then(
         async (res) => {
           console.log(res);
 
@@ -54,6 +58,8 @@ export class RegisterPage implements OnInit {
             uid: res.user.uid,
             name: res.user.displayName,
             email: res.user.email,
+            dateOfBirth: this.form.value.dateOfBirth,
+            country: this.form.value.country,
           };
 
           this.utilService.setElementFromLocalStorage('user', user);
@@ -73,9 +79,9 @@ export class RegisterPage implements OnInit {
           this.utilService.dismissLoading();
 
           this.utilService.presentToast({
-            message: error,
+            message: 'Registration failed!',
             duration: 5000,
-            color: 'warning',
+            color: 'danger',
             icon: 'alert-circle-outline',
           });
         }

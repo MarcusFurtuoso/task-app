@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { map, tap } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -18,7 +18,6 @@ export class AuthPage implements OnInit {
   });
 
   constructor(
-    private router: Router,
     private firebaseService: FirebaseService,
     private utilService: UtilsService
   ) {}
@@ -35,13 +34,28 @@ export class AuthPage implements OnInit {
         async (res) => {
           console.log(res);
 
-          let user: User = {
-            uid: res.user.uid,
-            name: res.user.displayName,
-            email: res.user.email,
-          };
+          this.firebaseService
+            .getUser(res.user.uid)
+            .pipe(
+              map((user) => {
+                return {
+                  dateOfBirth: user.dateOfBirth,
+                  country: user.country,
+                };
+              })
+            )
+            .subscribe((userAttributes) => {
+              let user: User = {
+                uid: res.user.uid,
+                name: res.user.displayName,
+                email: res.user.email,
+                dateOfBirth: userAttributes.dateOfBirth,
+                country: userAttributes.country,
+              };
 
-          this.utilService.setElementFromLocalStorage('user', user);
+              this.utilService.setElementFromLocalStorage('user', user);
+            });
+
           this.utilService.routerLink('/tabs/home');
           this.utilService.dismissLoading();
 
@@ -56,6 +70,8 @@ export class AuthPage implements OnInit {
         },
         (error) => {
           this.utilService.dismissLoading();
+
+          console.log(error);
 
           this.utilService.presentToast({
             message: 'Error when authenticating',

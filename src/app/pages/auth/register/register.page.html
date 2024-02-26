@@ -6,7 +6,7 @@
 
   <div class="content">
     <div class="d-flex-center">
-      <form (ngSubmit)="submit()" class="ion-text-center">
+      <form [formGroup]="form" (ngSubmit)="submit()" class="ion-text-center">
         <app-custom-input
           autocomplete="name"
           [control]="form.controls.name"
@@ -43,6 +43,47 @@
           <div *ngIf="form.controls.email.errors?.['email']">
             Email invalid!
           </div>
+        </div>
+
+        <app-custom-input
+          autocomplete="dateOfBirth"
+          [control]="form.controls.dateOfBirth"
+          type="date"
+          label="Date Of Birth"
+          icon="calendar-outline"
+        ></app-custom-input>
+        <div
+          class="validators"
+          *ngIf="form.controls.dateOfBirth.errors && form.controls.dateOfBirth.touched && form.controls.dateOfBirth.dirty"
+        >
+          <div *ngIf="form.controls.dateOfBirth.errors?.['required']">
+            Date of birth is required!
+          </div>
+        </div>
+
+        <ion-item>
+          <ion-icon color="primary" name="globe-outline" slot="start"></ion-icon>
+          <ion-select
+            formControlName="country"
+            label="Country/Region"
+            label-position="stacked"
+            label-placement="stacked"
+            value="brazil"
+            mode="ios"
+          >
+            <ion-select-option value="brazil">Brazil</ion-select-option>
+            <ion-select-option value="canada">Canada</ion-select-option>
+            <ion-select-option value="franca">França</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <div
+          class="validators"
+          *ngIf="form.controls.country.errors && form.controls.country.touched && form.controls.country.dirty"
+        >
+          <div *ngIf="form.controls.country.errors?.['required']">
+            Country/Region is required!
+          </div>
+
         </div>
 
         <app-custom-input
