@@ -1,16 +1,64 @@
 <ion-content>
   <app-header title="Profile"></app-header>
 
-  <div class="content ion-text-center">
+  <div class="content">
+    <div class="sign-out">
+      <ion-button (click)="signOut()" shape="round">
+        Sign out
+        <ion-icon slot="end" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </div>
 
-    <ion-icon class="avatar" name="person-circle-outline"></ion-icon>
+    <div class="avatar">
+      <ion-icon class="avatar" name="person-circle-outline"></ion-icon>
+      <a href="path/to/upload/photo">Add Photo</a>
+    </div>
 
-    <h2 color="black">{{ user.name }}</h2>
-    <div>{{ user.email }}</div>
+    <div class="form-container">
+      <form [formGroup]="form" (ngSubmit)="submit()" class="ion-text-center">
+        <div class="list-item">
+          <ion-item>
+            <ion-label position="stacked">Name</ion-label>
+            <ion-input formControlName="name" type="text"></ion-input>
+          </ion-item>
 
-    <ion-button (click)="signOut()" shape="round">
-      Sign out
-      <ion-icon slot="end" name="log-out-outline"></ion-icon>
-    </ion-button>
+          <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input formControlName="email" type="email"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Date of Birth</ion-label>
+            <ion-input formControlName="dateOfBirth" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-select
+              label="Country/Region"
+              label-position="stacked"
+              label-placement="stacked"
+              mode="ios"
+              formControlName="country"
+            >
+              <ion-select-option value="brazil">Brazil</ion-select-option>
+              <ion-select-option value="canada">Canada</ion-select-option>
+              <ion-select-option value="franca">França</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Creation date</ion-label>
+            <ion-input id="dateCreation" type="text" readonly="true"></ion-input>
+          </ion-item>
+        </div>
+        <ion-button
+          type="submit"
+          class="btn-save ion-margin-vertical"
+          color="primary"
+          shape="round"
+          >Save Changes</ion-button
+        >
+      </form>
+    </div>
   </div>
 </ion-content>
