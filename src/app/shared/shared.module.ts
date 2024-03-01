@@ -8,15 +8,17 @@ import { CustomInputComponent } from './components/custom-input/custom-input.com
 import { LogoComponent } from './components/logo/logo.component';
 import { NgCircleProgressModule } from 'ng-circle-progress';
 import { AddUpdateTaskComponent } from './components/add-update-task/add-update-task.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 @NgModule({
-  declarations: [HeaderComponent, CustomInputComponent, LogoComponent, AddUpdateTaskComponent],
+  declarations: [HeaderComponent, CustomInputComponent, LogoComponent, AddUpdateTaskComponent, ForgotPasswordComponent],
   exports: [
     HeaderComponent,
     CustomInputComponent,
     LogoComponent,
     NgCircleProgressModule,
     AddUpdateTaskComponent,
+    ForgotPasswordComponent,
     ReactiveFormsModule,
   ],
   imports: [

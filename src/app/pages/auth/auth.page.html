@@ -32,6 +32,9 @@
           label="Password"
           icon="lock-closed-outline"
         ></app-custom-input>
+        <ion-text class="forgot-password">
+          <a routerLink="forgot-password">Forgot password?</a>
+        </ion-text>
         <div
           class="validators"
           *ngIf="form.controls.password.errors && form.controls.password.touched && form.controls.password.dirty"
@@ -52,6 +55,7 @@
             <ion-icon slot="end" name="log-in-outline"></ion-icon>
           </ion-button>
         </div>
+
         <div>
           <ion-button
             routerLink="register"
@@ -70,23 +74,16 @@
             <hr class="vertical-line" />
           </div>
           <div class="">
-            <ion-button
-              shape="round"
-              color="primary"
-            >
-              Apple
-              <ion-icon slot="end" name="logo-apple"></ion-icon>
-            </ion-button>
-            <ion-button
-              shape="round"
-              color="primary"
-            >
+            <ion-button (click)="loginWithGoogle()" shape="round" color="primary">
               Google
               <ion-icon slot="end" name="logo-google"></ion-icon>
             </ion-button>
+            <ion-button shape="round" color="primary">
+              Apple
+              <ion-icon slot="end" name="logo-apple"></ion-icon>
+            </ion-button>
           </div>
         </div>
-
       </form>
     </div>
   </div>
