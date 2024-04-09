@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -13,6 +14,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class ProfilePage implements OnInit {
   user = {} as User;
   userSubscription: Subscription;
+  darkMode: boolean;
 
   form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
@@ -23,11 +25,16 @@ export class ProfilePage implements OnInit {
 
   constructor(
     private firebaseService: FirebaseService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit() {
-    null;
+    this.themeService.darkMode.pipe(
+      tap((darkMode) => {
+        this.darkMode = darkMode;
+      })
+    ).subscribe();
   }
 
   ionViewWillEnter() {
@@ -77,7 +84,7 @@ export class ProfilePage implements OnInit {
         (res) => {
           this.utilsService.dismissLoading();
           this.utilsService.presentToast({
-            message: 'User updated successfully',
+            message: 'User updated successfully!',
             duration: 1500,
             color: 'primary',
             icon: 'person-outline',
@@ -95,7 +102,7 @@ export class ProfilePage implements OnInit {
           console.log(err);
 
           this.utilsService.presentToast({
-            message: 'There was an error updating the user',
+            message: 'There was an error updating the user!',
             duration: 1500,
             color: 'danger',
             icon: 'alert-circle-outline',

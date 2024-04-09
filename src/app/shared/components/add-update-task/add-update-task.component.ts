@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ItemReorderEventDetail } from '@ionic/angular';
-import { Task, item } from 'src/app/models/task.model';
+import { Task, Item } from 'src/app/models/task.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -17,7 +17,7 @@ export class AddUpdateTaskComponent implements OnInit {
 
   form = new FormGroup({
     id: new FormControl(''),
-    title: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    title: new FormControl('', [Validators.required, Validators.minLength(3)]),
     description: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
@@ -153,7 +153,7 @@ export class AddUpdateTaskComponent implements OnInit {
         {
           text: 'Add',
           handler: (res) => {
-            let item: item = { name: res.name, completed: false };
+            let item: Item = { name: res.name, completed: false };
 
             this.form.value.items.push(item);
             this.form.controls.items.updateValueAndValidity();

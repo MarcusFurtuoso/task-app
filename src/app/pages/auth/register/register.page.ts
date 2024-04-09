@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription, tap } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { ThemeService } from 'src/app/services/theme.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { CustomValidators } from 'src/app/utils/custom-validators';
 
@@ -21,14 +23,21 @@ export class RegisterPage implements OnInit {
     confirmPassword: new FormControl(''),
   });
 
+  darkMode: boolean;
+
   constructor(
-    private router: Router,
     private firebaseService: FirebaseService,
-    private utilService: UtilsService
+    private utilService: UtilsService,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
     this.confirmPasswordValidator();
+    this.themeService.darkMode.pipe(
+      tap((darkMode) => {
+        this.darkMode = darkMode;
+      })
+    ).subscribe();
   }
 
   confirmPasswordValidator() {

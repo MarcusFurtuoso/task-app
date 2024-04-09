@@ -5,6 +5,7 @@ import { User } from 'src/app/models/user.model';
 
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ForgotPasswordComponent } from 'src/app/shared/components/forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-auth',
@@ -19,16 +20,20 @@ export class AuthPage implements OnInit {
 
   constructor(
     private firebaseService: FirebaseService,
-    private utilService: UtilsService
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
     null;
   }
 
+  loginWithGoogle() {
+    this.firebaseService.loginWithGoogle();
+  }
+
   submit(): void {
     if (this.form.valid) {
-      this.utilService.presentLoading({ message: 'Authenticating...' });
+      this.utilsService.presentLoading({ message: 'Authenticating...' });
 
       this.firebaseService.login(this.form.value as User).then(
         async (res) => {
@@ -39,27 +44,21 @@ export class AuthPage implements OnInit {
             .pipe(
               map((user) => {
                 return {
+                  ... user,
                   dateOfBirth: user.dateOfBirth,
                   country: user.country,
                 };
+              }),
+              tap((user) => {
+                this.utilsService.setElementFromLocalStorage('user', user);
               })
             )
-            .subscribe((userAttributes) => {
-              let user: User = {
-                uid: res.user.uid,
-                name: res.user.displayName,
-                email: res.user.email,
-                dateOfBirth: userAttributes.dateOfBirth,
-                country: userAttributes.country,
-              };
+            .subscribe();
 
-              this.utilService.setElementFromLocalStorage('user', user);
-            });
+          this.utilsService.routerLink('/tabs/home');
+          this.utilsService.dismissLoading();
 
-          this.utilService.routerLink('/tabs/home');
-          this.utilService.dismissLoading();
-
-          this.utilService.presentToast({
+          this.utilsService.presentToast({
             message: `Login successfully!`,
             duration: 1500,
             color: 'primary',
@@ -69,11 +68,11 @@ export class AuthPage implements OnInit {
           this.form.reset();
         },
         (error) => {
-          this.utilService.dismissLoading();
+          this.utilsService.dismissLoading();
 
           console.log(error);
 
-          this.utilService.presentToast({
+          this.utilsService.presentToast({
             message: 'Error when authenticating!',
             duration: 5000,
             color: 'danger',

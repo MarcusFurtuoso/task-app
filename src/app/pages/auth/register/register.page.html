@@ -62,7 +62,8 @@
         </div>
 
         <ion-item>
-          <ion-icon color="primary" name="globe-outline" slot="start"></ion-icon>
+          <ion-icon *ngIf="!darkMode" color="primary" name="globe-outline" slot="start"></ion-icon>
+          <ion-icon *ngIf="darkMode" name="globe-outline" slot="start"></ion-icon>
           <ion-select
             formControlName="country"
             label="Country/Region"

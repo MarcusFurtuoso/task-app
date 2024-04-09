@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
 import { User } from '../models/user.model';
-import { getAuth, updateProfile } from 'firebase/auth';
+import { AuthProvider, getAuth, updateProfile } from 'firebase/auth';
 import { UtilsService } from './utils.service';
-import { firstValueFrom, map } from 'rxjs';
-
+import { Observable, map, switchMap } from 'rxjs';
+import { GoogleAuthProvider } from 'firebase/auth';
+import { from } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -24,7 +28,10 @@ export class FirebaseService {
   }
 
   async register(user: User) {
-    const newUser = await this.auth.createUserWithEmailAndPassword(user.email, user.password);
+    const newUser = await this.auth.createUserWithEmailAndPassword(
+      user.email,
+      user.password
+    );
 
     const newUserObject = Object.assign({}, user);
 
@@ -72,6 +79,56 @@ export class FirebaseService {
   getUser(id: string) {
     return this.userCollection.doc<User>(id).valueChanges();
   }
+
+  async sendPasswordResetEmail(email: string) {
+    return await this.auth.sendPasswordResetEmail(email);
+  }
+
+  loginWithGoogle() {
+    from(this.loginProvider(new GoogleAuthProvider())).subscribe({
+      next: (res: any) => {
+        this.utilService.routerLink('/tabs/home');
+      },
+      error: (error) => {
+        console.log(error.message);
+      },
+    });
+  }
+
+  loginProvider(provider: AuthProvider) {
+    return from(this.auth.signInWithPopup(provider)).pipe(
+      switchMap((result) => this.setUserData(result.user))
+    );
+  }
+
+  setUserData(user: any) {
+    const userRef: AngularFirestoreDocument<any> = this.db.doc(
+      `Users/${user.uid}`
+    );
+    return userRef.snapshotChanges().pipe(
+      switchMap((docSnapshot) => {
+        if (docSnapshot.payload.exists) {
+          this.utilService.setElementFromLocalStorage(
+            'user',
+            docSnapshot.payload.data() as User
+          );
+          return this.utilService.routerLink('/tabs/home');
+        } else {
+          let userData: User = {
+            uid: user.uid,
+            name: user.displayName,
+            email: user.email,
+            dateOfBirth: '',
+            country: '',
+          };
+          this.utilService.setElementFromLocalStorage('user', userData);
+          this.utilService.routerLink('/tabs/home');
+          return userRef.set(userData, { merge: true });
+        }
+      })
+    );
+  }
+
 
   // Firebase CRUD
   getSubCollection(path: string, subCollectionName: string) {

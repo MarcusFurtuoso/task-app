@@ -22,8 +22,8 @@
     <div *ngIf="form.controls.title.errors?.['required']">
       Title is required!
     </div>
-    <div *ngIf="form.controls.title.errors?.['email']">
-      Title must have at least 4 characters!
+    <div *ngIf="form.controls.title.errors?.['minlength']">
+      Title must have at least 3 characters!
     </div>
   </div>
 
@@ -43,7 +43,7 @@
     <div *ngIf="form.controls.description.errors?.['required']">
       Description is required!
     </div>
-    <div *ngIf="form.controls.description.errors?.['email']">
+    <div *ngIf="form.controls.description.errors?.['minlength']">
       Description must have at least 4 characters!
     </div>
   </div>
@@ -80,7 +80,6 @@
             <ion-icon name="trash-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
-
       </ion-item>
 
       <ion-item class="item-reoder">
@@ -91,10 +90,15 @@
 </ion-content>
 
 <ion-footer>
-
-<div class="ion-text-center">
-  <ion-button class="ion-margin" [disabled]="form.invalid" mode="ios" (click)="submit()" shape="round">
-    {{ task ? 'Save Changes' : 'Create Task'}}
-  </ion-button>
-</div>
+  <div class="ion-text-center">
+    <ion-button
+      class="ion-margin"
+      [disabled]="form.invalid"
+      mode="ios"
+      (click)="submit()"
+      shape="round"
+    >
+      {{ task ? "Save Changes" : "Create Task" }}
+    </ion-button>
+  </div>
 </ion-footer>

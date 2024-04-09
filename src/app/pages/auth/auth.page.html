@@ -7,7 +7,7 @@
   <div class="content">
     <div class="d-flex-center">
       <form (ngSubmit)="submit()" class="ion-text-center">
-        <app-custom-input
+        <app-custom-input class="icon-color"
           autocomplete="email"
           [control]="form.controls.email"
           type="email"
@@ -74,14 +74,14 @@
             <hr class="vertical-line" />
           </div>
           <div class="">
-            <ion-button (click)="loginWithGoogle()" shape="round" color="primary">
+            <ion-button class="btn-google" (click)="loginWithGoogle()" shape="round" color="primary">
               Google
               <ion-icon slot="end" name="logo-google"></ion-icon>
             </ion-button>
-            <ion-button shape="round" color="primary">
+            <!-- <ion-button shape="round" color="primary">
               Apple
               <ion-icon slot="end" name="logo-apple"></ion-icon>
-            </ion-button>
+            </ion-button> -->
           </div>
         </div>
       </form>

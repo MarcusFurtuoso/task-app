@@ -18,18 +18,21 @@
       <form [formGroup]="form" (ngSubmit)="submit()" class="ion-text-center">
         <div class="list-item">
           <ion-item>
-            <ion-label position="stacked">Name</ion-label>
+            <ion-label *ngIf="!darkMode" position="stacked">Name</ion-label>
+            <ion-label *ngIf="darkMode" color="default" position="stacked">Name</ion-label>
             <ion-input formControlName="name" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Email</ion-label>
+            <ion-label *ngIf="!darkMode" position="stacked">Email</ion-label>
+            <ion-label *ngIf="darkMode" color="default" position="stacked">Email</ion-label>
             <ion-input formControlName="email" type="email"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Date of Birth</ion-label>
-            <ion-input formControlName="dateOfBirth" type="text"></ion-input>
+            <ion-label *ngIf="!darkMode" position="stacked">Date Of Birth</ion-label>
+            <ion-label *ngIf="darkMode" color="default" position="stacked">Date Of Birth</ion-label>
+            <ion-input formControlName="dateOfBirth" type="date"></ion-input>
           </ion-item>
 
           <ion-item>
@@ -47,7 +50,8 @@
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Creation date</ion-label>
+            <ion-label *ngIf="!darkMode" position="stacked">Name</ion-label>
+            <ion-label *ngIf="darkMode" color="default" position="stacked">Name</ion-label>
             <ion-input id="dateCreation" type="text" readonly="true"></ion-input>
           </ion-item>
         </div>

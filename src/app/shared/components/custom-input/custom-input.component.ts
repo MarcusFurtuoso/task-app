@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Subscription, tap } from 'rxjs';
+import { ThemeService } from 'src/app/services/theme.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-custom-input',
@@ -15,11 +18,19 @@ export class CustomInputComponent implements OnInit {
 
   isPassword: boolean;
   hide: boolean = true;
+  darkMode: boolean;
 
-  constructor() {}
+  constructor(
+    private themeService: ThemeService,
+  ) {}
 
   ngOnInit(): void {
     if (this.type == 'password') this.isPassword = true;
+    this.themeService.darkMode.pipe(
+      tap((darkMode) => {
+        this.darkMode = darkMode;
+      })
+    ).subscribe();
   }
 
   showOrHidePassword() {
@@ -30,6 +41,5 @@ export class CustomInputComponent implements OnInit {
       return;
     }
     this.type = 'text';
-
   }
 }

@@ -2,10 +2,10 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  items: item[];
+  items: Item[];
 }
 
-export interface item {
+export interface Item {
   name: string;
   completed: boolean;
 }
